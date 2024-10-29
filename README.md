@@ -1,11 +1,11 @@
 #inicializar entorno virtual 
-/n
+<br>
 py -m venv entornovirtual-env 
-/n
+<br>
 #activar entrono
-/n
+<br>
 entornovirtual-env/Scripts/activate
-/n
+<br>
 #ejecutar requirements.txt (instalar librerias)
-/n
+<br>
 pip install -r requirements.txt
