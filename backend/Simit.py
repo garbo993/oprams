@@ -44,28 +44,3 @@ ConsultaSimit()
 
 #if __name__ =="__main__ ":
 #    main()
-
-
-
-
-
-
-''''
-# ingreso de placa y url de la pagina 
-placa = 'gqt188'
-website = 'https://www.fcm.org.co/simit/#/estado-cuenta?numDocPlacaProp=gqt188'
-
-time.sleep(20)
-# response realiza la peticion get a la pagina web 
-response =  requests.get(website)
-# obtiene el html de la pagina
-content = response.text 
-
-# 
-soup = BeautifulSoup(content, 'html.parcer')
-#print(soup.prettify())
-
-box = soup.find('p', class_= 'mb-0 fs-17 font-weight-bold text-secondary' )
-print(box)
-
-'''
