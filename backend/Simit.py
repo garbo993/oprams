@@ -60,10 +60,7 @@ def ConsultaSimit():
     time.sleep(5)
     driver.quit()
 
-
+#ejecucion de funcion 
 ConsultaSimit()
-
-
-
 #if __name__ =="__main__ ":
 #    main()
