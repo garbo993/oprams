@@ -13,6 +13,7 @@ import json
 #############################################
 
 def cosnsultarRuaf():
+    #inicializar el servicio chrome automatizacion 
     service = Service(ChromeDriverManager().install())
     option = webdriver.ChromeOptions()
     # mostrando pantalla del funcionamiento
@@ -23,10 +24,11 @@ def cosnsultarRuaf():
     option.add_argument("--disable-extensions")
     driver= Chrome(service=service, options = option)
 
-   
+    #parametros 
     tipoDocumento = '5|CC' # debe de ser #/siglas 5|CC cedula , 6|PA pasaporte, 7|AS ADULTO SIN IDENTIFICACION, 10|CD CARNET DIPLOMATICO, 12|CN CERTIFICADO DE NACIDO VIVO, 13|SC SALVACONDUCTO DE PERMANENCIA, 14|PE PERMISO ESPECIAL DE PERMANENCIA , 15|PT, PERMISO POR PROTECCION TEMPORAL, 1|MS MENOR SIN IDENTIFICACION,  2|RC  REGISTRO CIVIL , 3|TI  TARJETA DE IDENTIDAD,  4|CE  CEDULA DE EXTRANJERIA 
     noDocumento = 1023976157 #cedula a consultar
-    fechaExpedicion = '12/05/2017'
+    fechaExpedicion = '12/05/2017' # fecha de expedicion de la cedula 
+
     #inicializar navegador
     website = "https://ruaf.sispro.gov.co/TerminosCondiciones.aspx" # url
     driver.get(website)
