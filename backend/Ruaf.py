@@ -10,6 +10,39 @@ from selenium.webdriver.common.keys import Keys
 import time
 import json
 
+
+#############################################
+basica = ["Cc","nombre1","nombre2", "apellido1", "apellido2","sexo"]
+salud = ["afiliacion","regimen", "fechaAfiliacion","estado","tipoAfiliacion"]
+pension = ["regimen","administradora","fechaAfiliacion","estadoAfiliacion"]
+arl = ["admiminstradora","fechaAfiliaicon","estado","actividadEconomica","muiciopioLabora"]
+conpensacion = ["admiminstradora","fechaAfiliaicon","estado","tipoMiembro","tipoAfiliado","muiciopioLabora"]
+
+def response(data):
+    response = []
+    for element in data:
+        #print(element.text)
+        response = element.text
+        #response.append(result.split())
+        #response.append(element.text.split())
+    print(response)
+    
+    '''
+    print(response[0])
+    for element in response[0]:
+        print(element)
+
+
+def convertJSON(consulta, data):
+    i=0
+    for  element in data :
+        info_dict = {consulta[i]:element.text} # convierte la danta que entra(repuesta) a un diccionario
+        i +=1 
+        info_json = json.dumps(info_dict, ensure_ascii=False, indent=4) # convierte el diccionario en un Json para enviar al front
+    print(info_json)
+    return(info_json)  
+'''     
+
 #############################################
 
 def cosnsultarRuaf():
@@ -59,7 +92,46 @@ def cosnsultarRuaf():
     #click boton consultar
     WebDriverWait(driver, 40).until(EC.presence_of_element_located((By.XPATH,"/html/body/form/div[6]/div[4]/div/input"))).click() # click opcion aceptar
 
+
+    #####################################################################
+    #Obtener datos de ruaf 
+
+    ####### informacion personal #############
+    
+    informacionPersonal = WebDriverWait(driver, 20).until(EC.presence_of_all_elements_located((By.XPATH,"/html/body/form/div[6]/div[5]/div/div/table/tbody/tr[4]/td[3]/div/div[1]/div/table/tbody/tr/td/table/tbody/tr[2]/td/table/tbody/tr/td/table/tbody/tr[5]/td[3]/table/tbody/tr[3]")))
+    response(informacionPersonal)
+    #convertJSON(basica, informacionPersonal)
+
+    ####### informacion de salud ############
+
+    informacionSalud = WebDriverWait(driver, 20).until(EC.presence_of_all_elements_located((By.XPATH,"/html/body/form/div[6]/div[5]/div/div/table/tbody/tr[4]/td[3]/div/div[1]/div/table/tbody/tr/td/table/tbody/tr[2]/td/table/tbody/tr/td/table/tbody/tr[10]/td[2]/table/tbody/tr[3]")))
+    #response(informacionSalud)
+    ####### Informacion pension ############
+
+    informacionPension = WebDriverWait(driver, 20).until(EC.presence_of_all_elements_located((By.XPATH,"/html/body/form/div[6]/div[5]/div/div/table/tbody/tr[4]/td[3]/div/div[1]/div/table/tbody/tr/td/table/tbody/tr[2]/td/table/tbody/tr/td/table/tbody/tr[17]/td[3]/table/tbody/tr[3]")))
+    #response(informacionPension)
+    ####### Informacion riesgos laborales  ############
+
+    informacionArl = WebDriverWait(driver, 20).until(EC.presence_of_all_elements_located((By.XPATH,"/html/body/form/div[6]/div[5]/div/div/table/tbody/tr[4]/td[3]/div/div[1]/div/table/tbody/tr/td/table/tbody/tr[2]/td/table/tbody/tr/td/table/tbody/tr[22]/td[3]/table/tbody/tr[3]")))
+    #response(informacionArl)
+
+    ####### Informacion Caja de compensacion  ############
+    informacionCompensacion = WebDriverWait(driver, 20).until(EC.presence_of_all_elements_located((By.XPATH,"/html/body/form/div[6]/div[5]/div/div/table/tbody/tr[4]/td[3]/div/div[1]/div/table/tbody/tr/td/table/tbody/tr[2]/td/table/tbody/tr/td/table/tbody/tr[27]/td[3]/table/tbody/tr[3]")))
+    #response(informacionCompensacion)
+
+    ###### Cesantias ###############
+
+    informacionCesantias = WebDriverWait(driver, 20).until(EC.presence_of_all_elements_located((By.XPATH,"/html/body/form/div[6]/div[5]/div/div/table/tbody/tr[4]/td[3]/div/div[1]/div/table/tbody/tr/td/table/tbody/tr[2]/td/table/tbody/tr/td/table/tbody/tr[34]")))
+    #response(informacionCesantias)
+
+
+    #####completa ############
+
+    informacionCompleta = WebDriverWait(driver, 20).until(EC.presence_of_all_elements_located((By.XPATH,"/html/body/form/div[6]/div[5]/div/div/table/tbody/tr[4]/td[3]/div/div[1]/div/table/tbody/tr/td/table/tbody/tr[2]/td/table/tbody/tr/td/table")))
+    #response(informacionCompleta)
+    
+
     time.sleep(20)
-    #driver.quit()
+    driver.quit()
 
 cosnsultarRuaf()

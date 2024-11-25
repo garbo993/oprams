@@ -8,40 +8,49 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 import json
-
 #############################################
 
 
 def convertir_a_Json(data):
     info_dict = {"consulta": data} # convierte la danta que entra(repuesta) a un diccionario
     info_json = json.dumps(info_dict, ensure_ascii=False, indent=4) # convierte el diccionario en un Json para enviar al front
-    print(info_json)    
+    print(info_json)
+    return(info_json)    
+
+#############################################
+
+def consultarMintri(placa):
+        service = Service(ChromeDriverManager().install())
+        option = webdriver.ChromeOptions()
+        # mostrando pantalla del funcionamiento
+        #option.add_argument("--window-size=1920,1080")
+        #sin mostrar pantalla 
+        option.add_argument("--headless") 
+        #desabilita las extenciones (agiliza el funcionamiento)
+        option.add_argument("--disable-extensions")
+        driver= Chrome(service=service, options = option)
+        #inicializar navegador
+        
+        #placa a ingresar 
+
+        website = "https://normalizacion.mintransporte.gov.co/?placa=" + placa.upper() # envia el numero de placa en mayuscula 
+        driver.get(website)
+
+        #realiza la consulta si tiene o no problemas en su registro de matricula 
+        respuesta = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH,"/html/body/div[2]"))).text # validacion si la placa no tiene comparendos
+        convertir_a_Json(respuesta) # respuesta del servicio 
+
+        ####termina la ejecucion####
+        time.sleep(5)
+        driver.quit()
 
 
-def consultarMintri():
-    service = Service(ChromeDriverManager().install())
-    option = webdriver.ChromeOptions()
-    # mostrando pantalla del funcionamiento
-    #option.add_argument("--window-size=1920,1080")
-    #sin mostrar pantalla 
-    option.add_argument("--headless") 
-    #desabilita las extenciones (agiliza el funcionamiento)
-    option.add_argument("--disable-extensions")
-    driver= Chrome(service=service, options = option)
-    #inicializar navegador
-    placa = 'KUK472' #placa a ingresar 
-
-    website = "https://normalizacion.mintransporte.gov.co/?placa=" + placa.upper() # envia el numero de placa en mayuscula 
-    driver.get(website)
-
-    #realiza la consulta si tiene o no problemas en su registro de matricula 
-    respuesta = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH,"/html/body/div[2]"))).text # validacion si la placa no tiene comparendos
-    print(respuesta) # respuesta del servicio 
-    convertir_a_Json(respuesta)
-
-    time.sleep(5)
-    driver.quit()
+try:
+        consultarMintri("KUK472") # ejecuta la funcion 
+        
+except:
+        respuesta = "el servidor no responde" 
+        print(respuesta)
 
 
 
-consultarMintri() # ejecuta la funcion 
