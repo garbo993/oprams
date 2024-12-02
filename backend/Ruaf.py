@@ -7,6 +7,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
+from selenium_stealth import stealth
 import time
 import json
 
@@ -19,20 +20,28 @@ arl = ["admiminstradora","fechaAfiliaicon","estado","actividadEconomica","muicio
 conpensacion = ["admiminstradora","fechaAfiliaicon","estado","tipoMiembro","tipoAfiliado","muiciopioLabora"]
 
 def response(data):
-    response = []
-    for element in data:
-        #print(element.text)
-        response = element.text
-        #response.append(result.split())
-        #response.append(element.text.split())
-    print(response)
-    
-    '''
-    print(response[0])
-    for element in response[0]:
-        print(element)
+    Dict = dict.fromkeys(basica, data)
+    print (Dict)
+    datos_texto = {clave: [e.text for e in elementos] for clave, elementos in Dict.items()}
+    print(datos_texto)
+
+    datos_procesados = {}
+    for clave, valor in datos_texto.items():
+        partes = valor[0].split('\n')  # Dividir por saltos de línea
+        datos_procesados['Cc'] = partes[0]
+        datos_procesados['nombre1'] = partes[1]
+        datos_procesados['nombre2'] = partes[2]
+        datos_procesados['apellido1'] = partes[3]
+        datos_procesados['apellido2'] = partes[4]
+        datos_procesados['sexo'] = partes[5]
+        break  # Evitar repetir el mismo procesamiento para cada campo
+
+# Imprimir resultado
+    print(datos_procesados)
 
 
+
+'''
 def convertJSON(consulta, data):
     i=0
     for  element in data :
@@ -43,7 +52,7 @@ def convertJSON(consulta, data):
     return(info_json)  
 '''     
 
-#############################################
+###### Creacion de cliente de automatizador ##############
 
 def cosnsultarRuaf():
     #inicializar el servicio chrome automatizacion 
@@ -55,7 +64,25 @@ def cosnsultarRuaf():
     #option.add_argument("--headless") 
     #desabilita las extenciones (agiliza el funcionamiento)
     option.add_argument("--disable-extensions")
+    #desabilita el reconocimento de webdriver
+    option.add_argument("--disable-blink-features-AutomationControlled")
+    #desactiva los parametros de automatizacion para hacer pasar selenium como humano 
+    option.add_experimental_option("excludeSwitches", ["enable-automation"])
+    option.add_experimental_option('useAutomationExtension', False)
     driver= Chrome(service=service, options = option)
+
+    #funcion que simula interfaz humana 
+    stealth(driver,
+        languages=["en-US", "en"],
+        vendor="Google Inc.",
+        platform="Win32",
+        webgl_vendor="Intel Inc.",
+        renderer="Intel Iris OpenGL Engine",
+        fix_hairline=True,
+        )
+
+
+##################################################   
 
     #parametros 
     tipoDocumento = '5|CC' # debe de ser #/siglas 5|CC cedula , 6|PA pasaporte, 7|AS ADULTO SIN IDENTIFICACION, 10|CD CARNET DIPLOMATICO, 12|CN CERTIFICADO DE NACIDO VIVO, 13|SC SALVACONDUCTO DE PERMANENCIA, 14|PE PERMISO ESPECIAL DE PERMANENCIA , 15|PT, PERMISO POR PROTECCION TEMPORAL, 1|MS MENOR SIN IDENTIFICACION,  2|RC  REGISTRO CIVIL , 3|TI  TARJETA DE IDENTIDAD,  4|CE  CEDULA DE EXTRANJERIA 
@@ -99,7 +126,15 @@ def cosnsultarRuaf():
     ####### informacion personal #############
     
     informacionPersonal = WebDriverWait(driver, 20).until(EC.presence_of_all_elements_located((By.XPATH,"/html/body/form/div[6]/div[5]/div/div/table/tbody/tr[4]/td[3]/div/div[1]/div/table/tbody/tr/td/table/tbody/tr[2]/td/table/tbody/tr/td/table/tbody/tr[5]/td[3]/table/tbody/tr[3]")))
-    response(informacionPersonal)
+    #response(informacionPersonal)
+    # Extraer el texto de cada WebElement
+    textos = [elemento.text  for elemento in informacionPersonal]
+    texto = textos[0].split("\n")
+    print(texto)
+
+    # Imprimir los textos extraídos
+    print(textos)
+
     #convertJSON(basica, informacionPersonal)
 
     ####### informacion de salud ############
