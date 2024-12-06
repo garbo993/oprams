@@ -126,7 +126,7 @@ def cosnsultarRuaf(tipoDocumento,noDocumento,fechaExpedicion):
     time.sleep(20)
     driver.quit()
 
-
+'''
 try:
     #parametros 
     tipoDocumento = '5|CC' # debe de ser #/siglas 5|CC cedula , 6|PA pasaporte, 7|AS ADULTO SIN IDENTIFICACION, 10|CD CARNET DIPLOMATICO, 12|CN CERTIFICADO DE NACIDO VIVO, 13|SC SALVACONDUCTO DE PERMANENCIA, 14|PE PERMISO ESPECIAL DE PERMANENCIA , 15|PT, PERMISO POR PROTECCION TEMPORAL, 1|MS MENOR SIN IDENTIFICACION,  2|RC  REGISTRO CIVIL , 3|TI  TARJETA DE IDENTIDAD,  4|CE  CEDULA DE EXTRANJERIA 
@@ -135,4 +135,4 @@ try:
     cosnsultarRuaf(tipoDocumento,noDocumento,fechaExpedicion)
 except:
     print ("No se pudo realizar la consulta")
-
+'''

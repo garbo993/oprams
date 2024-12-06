@@ -25,8 +25,10 @@ def convertir_a_Json(data):
             info_dict[key.strip()] = value.strip()
 
     # Convertimos el diccionario a JSON
-    info_json = json.dumps(info_dict, ensure_ascii=False, indent=4)
-    print(info_json)
+    #info_json = json.dumps(info_dict, ensure_ascii=False, indent=4)
+    #print(info_json)
+    #print (info_dict)
+    return info_dict
 
 ###################################################
 
@@ -55,15 +57,17 @@ def ConsultaSimit(placa):
         # realiza la consulta buscando si tiene comparendos con un tiempo de espera de 20 segundos 
         respuesta = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH,"/html/body/div[9]/div/div/div/div[1]/div/div[1]/div[1]/div[1]"))).text # validacion si la placa tiene comparendos
         #print(respuesta)
-        
-    convertir_a_Json(respuesta)# respuesta del servicio 
+    
+
     time.sleep(5)
     driver.quit()
+    return  convertir_a_Json(respuesta)# respuesta del servicio 
 
 #ejecucion de funcion 
-
+'''
 try: 
     placa = 'abc123'
     ConsultaSimit(placa)
 except: 
     print("no response")
+'''

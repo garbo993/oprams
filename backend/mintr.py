@@ -12,11 +12,11 @@ import json
 
 
 def convertir_a_Json(data):
-    info_dict = {"consulta": data} # convierte la danta que entra(repuesta) a un diccionario
-    info_json = json.dumps(info_dict, ensure_ascii=False, indent=4) # convierte el diccionario en un Json para enviar al front
-    print(info_json)
-    return(info_json)    
-
+    info_dict = {"consulta": data} # convierte la data que entra(repuesta) a un diccionario
+    #info_json = json.dumps(info_dict, ensure_ascii=False, indent=4) # convierte el diccionario en un Json para enviar al front
+    #print(info_json)
+    #return(info_json)
+    return info_dict
 #############################################
 
 def consultarMintri(placa):
@@ -38,20 +38,20 @@ def consultarMintri(placa):
 
         #realiza la consulta si tiene o no problemas en su registro de matricula 
         respuesta = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH,"/html/body/div[2]"))).text # validacion si la placa no tiene comparendos
-        convertir_a_Json(respuesta) # respuesta del servicio 
 
         ####termina la ejecucion####
         time.sleep(5)
         driver.quit()
+        return convertir_a_Json(respuesta) # respuesta del servicio 
+        
 
-
+'''
 try:    
-        placa = "KUK472"
-        consultarMintri(placa) # ejecuta la funcion 
+        #placa = "KUK472"
+        #consultarMintri(placa) # ejecuta la funcion 
         
 except:
         respuesta = "el servidor no responde" 
         print(respuesta)
 
-
-
+'''
