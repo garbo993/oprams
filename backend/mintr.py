@@ -45,8 +45,9 @@ def consultarMintri(placa):
         driver.quit()
 
 
-try:
-        consultarMintri("KUK472") # ejecuta la funcion 
+try:    
+        placa = "KUK472"
+        consultarMintri(placa) # ejecuta la funcion 
         
 except:
         respuesta = "el servidor no responde" 

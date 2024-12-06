@@ -49,12 +49,12 @@ def ConsultaSimit(placa):
     try:
     # realiza la consulta buscando si no tiene comparendo con un tiempo de espera de 20 segundos 
         respuesta = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH,"/html/body/div[9]/div/div/div/div[1]/div/div[1]/div/div/div/h3"))).text # validacion si la placa no tiene comparendos
-        print(respuesta) # respuesta del servicio 
+        #print(respuesta) # respuesta del servicio 
 
     except:
         # realiza la consulta buscando si tiene comparendos con un tiempo de espera de 20 segundos 
         respuesta = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH,"/html/body/div[9]/div/div/div/div[1]/div/div[1]/div[1]/div[1]"))).text # validacion si la placa tiene comparendos
-        print(respuesta)
+        #print(respuesta)
         
     convertir_a_Json(respuesta)# respuesta del servicio 
     time.sleep(5)
@@ -63,6 +63,7 @@ def ConsultaSimit(placa):
 #ejecucion de funcion 
 
 try: 
-    ConsultaSimit('abc123')
+    placa = 'abc123'
+    ConsultaSimit(placa)
 except: 
     print("no response")

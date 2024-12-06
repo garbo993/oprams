@@ -11,57 +11,36 @@ from selenium_stealth import stealth
 import time
 import json
 
-
 #############################################
+#listas de datos #
 basica = ["Cc","nombre1","nombre2", "apellido1", "apellido2","sexo"]
 salud = ["afiliacion","regimen", "fechaAfiliacion","estado","tipoAfiliacion"]
 pension = ["regimen","administradora","fechaAfiliacion","estadoAfiliacion"]
-arl = ["admiminstradora","fechaAfiliaicon","estado","actividadEconomica","muiciopioLabora"]
-conpensacion = ["admiminstradora","fechaAfiliaicon","estado","tipoMiembro","tipoAfiliado","muiciopioLabora"]
+arl = ["admiministradora","fechaAfiliaicon","estado","actividadEconomica","municiopioLabora"]
+compensacion = ["admiministradora","fechaAfiliaicon","estado","tipoMiembro","tipoAfiliado","municiopioLabora"]
+#############################################
 
-def response(data):
-    Dict = dict.fromkeys(basica, data)
-    print (Dict)
-    datos_texto = {clave: [e.text for e in elementos] for clave, elementos in Dict.items()}
-    print(datos_texto)
-
-    datos_procesados = {}
-    for clave, valor in datos_texto.items():
-        partes = valor[0].split('\n')  # Dividir por saltos de línea
-        datos_procesados['Cc'] = partes[0]
-        datos_procesados['nombre1'] = partes[1]
-        datos_procesados['nombre2'] = partes[2]
-        datos_procesados['apellido1'] = partes[3]
-        datos_procesados['apellido2'] = partes[4]
-        datos_procesados['sexo'] = partes[5]
-        break  # Evitar repetir el mismo procesamiento para cada campo
-
-# Imprimir resultado
-    print(datos_procesados)
-
-
-
-'''
-def convertJSON(consulta, data):
-    i=0
-    for  element in data :
-        info_dict = {consulta[i]:element.text} # convierte la danta que entra(repuesta) a un diccionario
-        i +=1 
-        info_json = json.dumps(info_dict, ensure_ascii=False, indent=4) # convierte el diccionario en un Json para enviar al front
+def convertirJson(lista, data):
+    #covierte la respuesta de consulta de objeto de sesion selenium a lista#
+    textos = [elemento.text  for elemento in data]
+    texto = textos[0].split("\n")
+    # une las listas de datos con los resultados de las consultas en un diccionario {key, value}#
+    Dict = dict(zip(lista,texto))
+    #print (Dict)
+    #convierte el diccionario en JSON#
+    info_json = json.dumps(Dict, ensure_ascii=False, indent=4)
     print(info_json)
-    return(info_json)  
-'''     
 
 ###### Creacion de cliente de automatizador ##############
 
-def cosnsultarRuaf():
+def cosnsultarRuaf(tipoDocumento,noDocumento,fechaExpedicion):
     #inicializar el servicio chrome automatizacion 
     service = Service(ChromeDriverManager().install())
     option = webdriver.ChromeOptions()
     # mostrando pantalla del funcionamiento
-    option.add_argument("--window-size=1920,1080")
+    #option.add_argument("--window-size=1920,1080")
     #sin mostrar pantalla 
-    #option.add_argument("--headless") 
+    option.add_argument("--headless") 
     #desabilita las extenciones (agiliza el funcionamiento)
     option.add_argument("--disable-extensions")
     #desabilita el reconocimento de webdriver
@@ -81,14 +60,7 @@ def cosnsultarRuaf():
         fix_hairline=True,
         )
 
-
 ##################################################   
-
-    #parametros 
-    tipoDocumento = '5|CC' # debe de ser #/siglas 5|CC cedula , 6|PA pasaporte, 7|AS ADULTO SIN IDENTIFICACION, 10|CD CARNET DIPLOMATICO, 12|CN CERTIFICADO DE NACIDO VIVO, 13|SC SALVACONDUCTO DE PERMANENCIA, 14|PE PERMISO ESPECIAL DE PERMANENCIA , 15|PT, PERMISO POR PROTECCION TEMPORAL, 1|MS MENOR SIN IDENTIFICACION,  2|RC  REGISTRO CIVIL , 3|TI  TARJETA DE IDENTIDAD,  4|CE  CEDULA DE EXTRANJERIA 
-    noDocumento = 1023976157 #cedula a consultar
-    fechaExpedicion = '12/05/2017' # fecha de expedicion de la cedula 
-
     #inicializar navegador
     website = "https://ruaf.sispro.gov.co/TerminosCondiciones.aspx" # url
     driver.get(website)
@@ -109,7 +81,7 @@ def cosnsultarRuaf():
     ccNumberInsert.send_keys(noDocumento)
     
     #ingresar fecha en formato dd/mm/aaaa
-    
+
     dateExpInsert = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH,"/html/body/form/div[6]/div[3]/div/input"))) # buscar campo  fecha de ex  pedicion  
     dateExpInsert.click()
     dateExpInsert.send_keys(fechaExpedicion)
@@ -119,54 +91,48 @@ def cosnsultarRuaf():
     #click boton consultar
     WebDriverWait(driver, 40).until(EC.presence_of_element_located((By.XPATH,"/html/body/form/div[6]/div[4]/div/input"))).click() # click opcion aceptar
 
-
     #####################################################################
     #Obtener datos de ruaf 
 
     ####### informacion personal #############
     
     informacionPersonal = WebDriverWait(driver, 20).until(EC.presence_of_all_elements_located((By.XPATH,"/html/body/form/div[6]/div[5]/div/div/table/tbody/tr[4]/td[3]/div/div[1]/div/table/tbody/tr/td/table/tbody/tr[2]/td/table/tbody/tr/td/table/tbody/tr[5]/td[3]/table/tbody/tr[3]")))
-    #response(informacionPersonal)
     # Extraer el texto de cada WebElement
-    textos = [elemento.text  for elemento in informacionPersonal]
-    texto = textos[0].split("\n")
-    print(texto)
-
-    # Imprimir los textos extraídos
-    print(textos)
-
-    #convertJSON(basica, informacionPersonal)
+    convertirJson(basica, informacionPersonal)
 
     ####### informacion de salud ############
 
     informacionSalud = WebDriverWait(driver, 20).until(EC.presence_of_all_elements_located((By.XPATH,"/html/body/form/div[6]/div[5]/div/div/table/tbody/tr[4]/td[3]/div/div[1]/div/table/tbody/tr/td/table/tbody/tr[2]/td/table/tbody/tr/td/table/tbody/tr[10]/td[2]/table/tbody/tr[3]")))
-    #response(informacionSalud)
+    convertirJson(salud, informacionSalud)
+
     ####### Informacion pension ############
 
     informacionPension = WebDriverWait(driver, 20).until(EC.presence_of_all_elements_located((By.XPATH,"/html/body/form/div[6]/div[5]/div/div/table/tbody/tr[4]/td[3]/div/div[1]/div/table/tbody/tr/td/table/tbody/tr[2]/td/table/tbody/tr/td/table/tbody/tr[17]/td[3]/table/tbody/tr[3]")))
-    #response(informacionPension)
+    convertirJson(pension,informacionPension)
+
     ####### Informacion riesgos laborales  ############
 
     informacionArl = WebDriverWait(driver, 20).until(EC.presence_of_all_elements_located((By.XPATH,"/html/body/form/div[6]/div[5]/div/div/table/tbody/tr[4]/td[3]/div/div[1]/div/table/tbody/tr/td/table/tbody/tr[2]/td/table/tbody/tr/td/table/tbody/tr[22]/td[3]/table/tbody/tr[3]")))
-    #response(informacionArl)
+    convertirJson(arl,informacionArl)
 
     ####### Informacion Caja de compensacion  ############
     informacionCompensacion = WebDriverWait(driver, 20).until(EC.presence_of_all_elements_located((By.XPATH,"/html/body/form/div[6]/div[5]/div/div/table/tbody/tr[4]/td[3]/div/div[1]/div/table/tbody/tr/td/table/tbody/tr[2]/td/table/tbody/tr/td/table/tbody/tr[27]/td[3]/table/tbody/tr[3]")))
-    #response(informacionCompensacion)
+    convertirJson(compensacion, informacionCompensacion)
 
     ###### Cesantias ###############
-
     informacionCesantias = WebDriverWait(driver, 20).until(EC.presence_of_all_elements_located((By.XPATH,"/html/body/form/div[6]/div[5]/div/div/table/tbody/tr[4]/td[3]/div/div[1]/div/table/tbody/tr/td/table/tbody/tr[2]/td/table/tbody/tr/td/table/tbody/tr[34]")))
-    #response(informacionCesantias)
-
-
-    #####completa ############
-
-    informacionCompleta = WebDriverWait(driver, 20).until(EC.presence_of_all_elements_located((By.XPATH,"/html/body/form/div[6]/div[5]/div/div/table/tbody/tr[4]/td[3]/div/div[1]/div/table/tbody/tr/td/table/tbody/tr[2]/td/table/tbody/tr/td/table")))
-    #response(informacionCompleta)
     
 
     time.sleep(20)
     driver.quit()
 
-cosnsultarRuaf()
+
+try:
+    #parametros 
+    tipoDocumento = '5|CC' # debe de ser #/siglas 5|CC cedula , 6|PA pasaporte, 7|AS ADULTO SIN IDENTIFICACION, 10|CD CARNET DIPLOMATICO, 12|CN CERTIFICADO DE NACIDO VIVO, 13|SC SALVACONDUCTO DE PERMANENCIA, 14|PE PERMISO ESPECIAL DE PERMANENCIA , 15|PT, PERMISO POR PROTECCION TEMPORAL, 1|MS MENOR SIN IDENTIFICACION,  2|RC  REGISTRO CIVIL , 3|TI  TARJETA DE IDENTIDAD,  4|CE  CEDULA DE EXTRANJERIA 
+    noDocumento = 1023976157 #cedula a consultar
+    fechaExpedicion = '12/05/2017' # fecha de expedicion de la cedula 
+    cosnsultarRuaf(tipoDocumento,noDocumento,fechaExpedicion)
+except:
+    print ("No se pudo realizar la consulta")
+
