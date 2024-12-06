@@ -26,21 +26,23 @@ def convertirJson(lista, data):
     texto = textos[0].split("\n")
     # une las listas de datos con los resultados de las consultas en un diccionario {key, value}#
     Dict = dict(zip(lista,texto))
-    #print (Dict)
     #convierte el diccionario en JSON#
-    info_json = json.dumps(Dict, ensure_ascii=False, indent=4)
-    print(info_json)
+    return Dict
+    #info_json = json.dumps(Dict, ensure_ascii=False, indent=4)
+    #print(info_json)
 
 ###### Creacion de cliente de automatizador ##############
 
-def cosnsultarRuaf(tipoDocumento,noDocumento,fechaExpedicion):
+def consultarRuaf(tipoDocumento,noDocumento,fechaExpedicion):
+
+    fechaExpedicion = fechaExpedicion.replace("-","/" )
     #inicializar el servicio chrome automatizacion 
     service = Service(ChromeDriverManager().install())
     option = webdriver.ChromeOptions()
     # mostrando pantalla del funcionamiento
-    #option.add_argument("--window-size=1920,1080")
+    option.add_argument("--window-size=1920,1080")
     #sin mostrar pantalla 
-    option.add_argument("--headless") 
+    #option.add_argument("--headless") 
     #desabilita las extenciones (agiliza el funcionamiento)
     option.add_argument("--disable-extensions")
     #desabilita el reconocimento de webdriver
@@ -122,17 +124,26 @@ def cosnsultarRuaf(tipoDocumento,noDocumento,fechaExpedicion):
     ###### Cesantias ###############
     informacionCesantias = WebDriverWait(driver, 20).until(EC.presence_of_all_elements_located((By.XPATH,"/html/body/form/div[6]/div[5]/div/div/table/tbody/tr[4]/td[3]/div/div[1]/div/table/tbody/tr/td/table/tbody/tr[2]/td/table/tbody/tr/td/table/tbody/tr[34]")))
     
+    response = {
+        "informacionPersonal"       : convertirJson(basica, informacionPersonal), 
+        "informacionSalud"          : convertirJson(salud, informacionSalud),
+        "informacionPension"        : convertirJson(pension,informacionPension),
+        "informacionArl"            : convertirJson(arl,informacionArl) ,
+        "informacionCompensacion"   : convertirJson(compensacion, informacionCompensacion)
+    }
+    print(response)
+    
 
     time.sleep(20)
     driver.quit()
-
+    return  response
 '''
 try:
     #parametros 
     tipoDocumento = '5|CC' # debe de ser #/siglas 5|CC cedula , 6|PA pasaporte, 7|AS ADULTO SIN IDENTIFICACION, 10|CD CARNET DIPLOMATICO, 12|CN CERTIFICADO DE NACIDO VIVO, 13|SC SALVACONDUCTO DE PERMANENCIA, 14|PE PERMISO ESPECIAL DE PERMANENCIA , 15|PT, PERMISO POR PROTECCION TEMPORAL, 1|MS MENOR SIN IDENTIFICACION,  2|RC  REGISTRO CIVIL , 3|TI  TARJETA DE IDENTIDAD,  4|CE  CEDULA DE EXTRANJERIA 
     noDocumento = 1023976157 #cedula a consultar
     fechaExpedicion = '12/05/2017' # fecha de expedicion de la cedula 
-    cosnsultarRuaf(tipoDocumento,noDocumento,fechaExpedicion)
+    consultarRuaf(tipoDocumento,noDocumento,fechaExpedicion)
 except:
     print ("No se pudo realizar la consulta")
 '''

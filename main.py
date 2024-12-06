@@ -32,6 +32,13 @@ def response2(placa):
     except: 
         return "no se pudo realizar la peticion"
     
+
+@app.route("/ruaf/<tipoDocumento>/<noDocumento>/<fechaExpedicion>", methods = ['GET'])
+def response3(tipoDocumento, noDocumento, fechaExpedicion):
+    try:
+        return jsonify(Ruaf.consultarRuaf(tipoDocumento, noDocumento, fechaExpedicion))
+    except: 
+        return "no se pudo realizar la peticion"
     
 
 
