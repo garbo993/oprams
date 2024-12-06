@@ -131,7 +131,7 @@ def consultarRuaf(tipoDocumento,noDocumento,fechaExpedicion):
         "informacionArl"            : convertirJson(arl,informacionArl) ,
         "informacionCompensacion"   : convertirJson(compensacion, informacionCompensacion)
     }
-    print(response)
+   
     
 
     time.sleep(20)
