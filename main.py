@@ -1,4 +1,4 @@
-from flask import Flask, jsonify,  request
+from flask import Flask, jsonify
 from backend import mintr,Ruaf,Simit
 
 
@@ -10,12 +10,8 @@ app.config['JSON_AS_ASCII'] = False
 
 @app.route("/")
 def root():
-    return "home"
+    return "Api de consumo para la consulta de antecedentes y comparendos"
 
-
-@app.route("/login")
-def login():
-    return (request)
 
 @app.route("/mintr/<placa>", methods = ['GET'])
 def response(placa):

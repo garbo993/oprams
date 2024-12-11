@@ -179,8 +179,8 @@ def consultarRuaf(tipoDocumento,noDocumento,fechaExpedicion):
 try:
     #parametros 
     tipoDocumento = '5|CC' # debe de ser #/siglas 5|CC cedula , 6|PA pasaporte, 7|AS ADULTO SIN IDENTIFICACION, 10|CD CARNET DIPLOMATICO, 12|CN CERTIFICADO DE NACIDO VIVO, 13|SC SALVACONDUCTO DE PERMANENCIA, 14|PE PERMISO ESPECIAL DE PERMANENCIA , 15|PT, PERMISO POR PROTECCION TEMPORAL, 1|MS MENOR SIN IDENTIFICACION,  2|RC  REGISTRO CIVIL , 3|TI  TARJETA DE IDENTIDAD,  4|CE  CEDULA DE EXTRANJERIA 
-    noDocumento = 79559643 #cedula a consultar
-    fechaExpedicion = '22/03/1989' # fecha de expedicion de la cedula 
+    noDocumento = 123456 #cedula a consultar
+    fechaExpedicion = 'dd-mm-aaaa'# fecha de expedicion de la cedula 
     consultarRuaf(tipoDocumento,noDocumento,fechaExpedicion)
 except:
     print ("No se pudo realizar la consulta")
